@@ -9,11 +9,15 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    networks:
+      - monitoring
+    restart: unless-stopped
 
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
     container_name: node-exporter
-    network_mode: "host"
+    networks:
+      - monitoring
     pid: "host"
     restart: unless-stopped
 
@@ -27,7 +31,12 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - monitoring
     restart: unless-stopped
 
 volumes:
   grafana-storage:
+
+networks:
+  monitoring:
